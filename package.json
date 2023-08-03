@@ -1,6 +1,6 @@
 {
   "name": "open-browser-for-webpack-mac",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "优化 webpack-dev-server 每次编译后都新开浏览器 tab",
   "main": "src/index.js",
   "scripts": {
@@ -14,5 +14,8 @@
     "openChrome.applescript"
   ],
   "author": "spp",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "open": "^9.1.0"
+  }
 }

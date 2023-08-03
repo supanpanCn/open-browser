@@ -1,4 +1,4 @@
-const { exec } = require("child_process");
+const { exec, spawn } = require("child_process");
 const { readFileSync, existsSync } = require("fs");
 const { networkInterfaces } = require("os");
 
@@ -34,7 +34,10 @@ function parseHosts() {
 
         for (let i = 1; i < tokens.length; i++) {
           const domain = tokens[i];
-          mappings[ip] = domain;
+          if (!mappings[ip]) {
+            mappings[ip] = [];
+          }
+          mappings[ip].push(domain);
         }
       }
     } catch (_) {}
@@ -71,10 +74,18 @@ function execAsync(command, options) {
   });
 }
 
+function openByJs(urls, legalBrowser) {
+  try {
+    const cliArguments = ["-a", legalBrowser, urls[urls.length - 1]];
+    spawn("open", cliArguments);
+  } catch (_) {}
+}
+
 module.exports = {
   execAsync,
   getIps,
   parseHosts,
   AIMBROWSERS,
   PLUGINNAME,
+  openByJs,
 };
