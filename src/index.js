@@ -42,6 +42,7 @@ class OpenBrowser {
   constructor(address, port = 9090) {
     this.address = address;
     this.port = port;
+    this.opened = false;
   }
   async apply(compiler) {
     port = process.env.PORT || this.port;
@@ -54,9 +55,12 @@ class OpenBrowser {
         const realPort = compiler.options.devServer.port;
         delete compiler.options.devServer.open;
         compiler.hooks.emit.tapPromise(PLUGINNAME, async () => {
-          // TODO:validate it
-          openUrl = openUrl.replace(port, realPort);
-          await _openBrowser(openUrl);
+          if(!this.opened){
+            // TODO:validate it
+            openUrl = openUrl.replace(port, realPort);
+            await _openBrowser(openUrl);
+          }
+          this.opened = true;
         });
       }
     }
