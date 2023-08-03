@@ -15,9 +15,11 @@ const OpenBrowser = require('open-browser-for-webpack-mac');
 module.exports = {
     ...,
     plugins:[
-        new OpenBrowser(function(host, port) {
-            return `http://${host}:${port}/#/home`;
-        }, 9090),
+        new OpenBrowser({
+            port:9090,
+            address:(host,port)=>`http://${host}:${port}`,
+            fallback:''
+        }),
     ]
 }
 ```
