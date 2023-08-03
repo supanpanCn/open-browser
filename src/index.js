@@ -25,12 +25,12 @@ async function _check(address = () => {}) {
   }
 }
 
-async function _openBrowser(url) {
+async function _openBrowser(url,fallback) {
   const ps = await execAsync("ps cax");
   const legalBrowser = AIMBROWSERS.find((b) => ps.includes(b));
   if (legalBrowser) {
     await execAsync(
-      `osascript openChrome.applescript "${encodeURI(url)}" "${legalBrowser}"`,
+      `osascript openChrome.applescript "${encodeURI(url)}" "${legalBrowser}" "${fallback}"`,
       {
         cwd: resolve(__dirname, ".."),
       }
@@ -39,10 +39,12 @@ async function _openBrowser(url) {
 }
 
 class OpenBrowser {
-  constructor(address, port = 9090) {
+  constructor(payload) {
+    const { address, port = 9090 , fallback} = payload
     this.address = address;
     this.port = port;
     this.opened = false;
+    this.fallback = fallback;
   }
   async apply(compiler) {
     port = process.env.PORT || this.port;
@@ -58,7 +60,7 @@ class OpenBrowser {
           if(!this.opened){
             // TODO:validate it
             openUrl = openUrl.replace(port, realPort);
-            await _openBrowser(openUrl);
+            await _openBrowser(openUrl,this.fallback);
           }
           this.opened = true;
         });

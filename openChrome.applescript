@@ -10,6 +10,7 @@ on run argv
   -- default to Google Chrome
   if (count of argv) > 1 then
     set theProgram to item 2 of argv
+    set fallback to item 3 of argv
   end if
 
   using terms from application "Google Chrome"
@@ -22,7 +23,7 @@ on run argv
       -- 1: Looking for tab running debugger
       -- then, Reload debugging tab if found
       -- then return
-      set found to my lookupTabWithUrl(theURL)
+      set found to my lookupTabWithUrl(theURL,fallback)
       if found then
         set targetWindow's active tab index to targetTabIndex
         tell targetTab to reload
@@ -57,7 +58,7 @@ end run
 -- Lookup tab with given url
 -- if found, store tab, index, and window in properties
 -- (properties were declared on top of file)
-on lookupTabWithUrl(lookupUrl)
+on lookupTabWithUrl(lookupUrl,fallback)
   using terms from application "Google Chrome"
     tell application theProgram
       -- Find a tab with the given url
@@ -67,7 +68,7 @@ on lookupTabWithUrl(lookupUrl)
         set theTabIndex to 0
         repeat with theTab in every tab of theWindow
           set theTabIndex to theTabIndex + 1
-          if (theTab's URL as string) contains lookupUrl then
+          if (theTab's URL as string) contains lookupUrl or (theTab's URL as string) contains fallback then
             -- assign tab, tab index, and window to properties
             set targetTab to theTab
             set targetTabIndex to theTabIndex
