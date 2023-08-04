@@ -18,7 +18,8 @@ module.exports = {
         new OpenBrowser({
             port:9090,
             address:(host,port)=>`http://${host}:${port}`,
-            fallback:''
+            fallback:'',
+            validateAddress:(ads)=>ads
         }),
     ]
 }
