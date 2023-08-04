@@ -13,7 +13,7 @@ const errs = [];
 let tryTimes = -1;
 
 async function _check(address = () => {}, validateAddress) {
-  const queue = [];
+  let queue = [];
   if (process.platform === "darwin") {
     const ips = getIps();
     const mapping = parseHosts();
@@ -25,8 +25,9 @@ async function _check(address = () => {}, validateAddress) {
         });
       }
     }
+    queue = validateAddress([...new Set(queue)])
     tryTimes = queue.length;
-    return validateAddress([...new Set(queue)]);
+    return queue;
   }
   return queue;
 }
